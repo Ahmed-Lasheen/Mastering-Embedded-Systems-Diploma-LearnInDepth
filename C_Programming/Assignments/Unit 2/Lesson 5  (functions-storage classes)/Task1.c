@@ -10,7 +10,7 @@ int main()
 	fflush(stdout);
 	scanf("%d %d",&a,&b);
 	fflush(stdin);fflush(stdout);
-	printf("Prime numbers between 10 and 30 are: ");
+	printf("Prime numbers between %d and %d are: ",a,b);
 	fflush(stdout);
 	prime(a,b);
 
