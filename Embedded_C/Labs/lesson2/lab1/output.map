@@ -1,0 +1,82 @@
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+Mem              0x00000000         0x04000000         xrw
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+                0x00010000                . = 0x10000
+
+.glue_7         0x00000000        0x0
+ .glue_7        0x00000000        0x0 linker stubs
+
+.glue_7t        0x00000000        0x0
+ .glue_7t       0x00000000        0x0 linker stubs
+
+.vfp11_veneer   0x00000000        0x0
+ .vfp11_veneer  0x00000000        0x0 linker stubs
+
+.v4_bx          0x00000000        0x0
+ .v4_bx         0x00000000        0x0 linker stubs
+
+.text           0x00000000       0x80
+ .text          0x00000000       0x10 Startup.o
+                0x00000000                reset
+ .text          0x00000010       0x50 uart.o
+                0x00000010                uart_send
+ .text          0x00000060       0x20 app.o
+                0x00000060                main
+
+.iplt           0x00000080        0x0
+ .iplt          0x00000000        0x0 Startup.o
+
+.startup
+ Startup.o(.txt)
+
+.txt            0x00000080       0x64
+ *(.txt)
+ *(.rodata)
+ .rodata        0x00000080       0x64 app.o
+                0x00000080                mystring2
+
+.rel.dyn        0x000000e4        0x0
+ .rel.iplt      0x00000000        0x0 Startup.o
+
+.data           0x000000e4       0x64
+ *(.data)
+ .data          0x000000e4        0x0 Startup.o
+ .data          0x000000e4        0x0 uart.o
+ .data          0x000000e4       0x64 app.o
+                0x000000e4                mystring
+
+.igot.plt       0x00000148        0x0
+ .igot.plt      0x00000000        0x0 Startup.o
+
+.bss            0x00000148        0x0
+ *(.bss)
+ .bss           0x00000148        0x0 Startup.o
+ .bss           0x00000148        0x0 uart.o
+ .bss           0x00000148        0x0 app.o
+ *(COMMON)
+                0x00001148                . = (. + 0x1000)
+                0x00001148                stack_top = .
+LOAD Startup.o
+LOAD uart.o
+LOAD app.o
+OUTPUT(ahmedlasheen.elf elf32-littlearm)
+
+.ARM.attributes
+                0x00000000       0x2e
+ .ARM.attributes
+                0x00000000       0x22 Startup.o
+ .ARM.attributes
+                0x00000022       0x30 uart.o
+ .ARM.attributes
+                0x00000052       0x30 app.o
+
+.comment        0x00000000       0x11
+ .comment       0x00000000       0x11 uart.o
+                                 0x12 (size before relaxing)
+ .comment       0x00000000       0x12 app.o
